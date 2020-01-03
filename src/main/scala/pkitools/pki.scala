@@ -387,7 +387,7 @@ class Server(pki: Pki, env: Env) {
               val token = JWT.create()
                 .withAudience(env.config.otoroshiIssuer)
                 .withIssuedAt(org.joda.time.DateTime.now().toDate)
-                .withExpiresAt(org.joda.time.DateTime.now().plusSeconds(10).toDate)
+                .withExpiresAt(org.joda.time.DateTime.now().plusSeconds(30).toDate)
                 .withClaim("state-resp", jwt.getClaim("state").asString())
                 .sign(algo)
               f.map(r => r.copy(headers = r.headers :+ RawHeader("Otoroshi-State-Resp", token)))
