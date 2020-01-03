@@ -1,33 +1,30 @@
-package io.otoroshi.ssl.pki
+package io.otoroshi.pki
 
 import java.io.{ByteArrayInputStream, File, StringReader}
 import java.nio.charset.StandardCharsets.US_ASCII
 import java.nio.file.Files
-import java.security._
-import java.security.cert.{CertificateFactory, CertificateParsingException, X509Certificate}
+import java.security.{SecureRandom, _}
+import java.security.cert.{CertificateFactory, X509Certificate}
 import java.security.spec.PKCS8EncodedKeySpec
 import java.util.Base64
 import java.util.concurrent.atomic.AtomicLong
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.util.FastFuture
-import akka.stream.{ActorMaterializer, Materializer}
+import akka.stream.Materializer
 import akka.util.ByteString
-import io.otoroshi.ssl.pki.model._
-import io.otoroshi.ssl.pki.utils.IdGenerator
-import javax.crypto.Cipher.DECRYPT_MODE
-import javax.crypto.spec.PBEKeySpec
-import javax.crypto.{Cipher, EncryptedPrivateKeyInfo, SecretKey, SecretKeyFactory}
-import org.bouncycastle.asn1._
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers
 import org.bouncycastle.asn1.x500.X500Name
-import org.bouncycastle.asn1.x509._
+import org.bouncycastle.asn1.x509.{AuthorityKeyIdentifier, BasicConstraints, GeneralName, GeneralNames, X509Name, _}
+import org.bouncycastle.cert.X509v3CertificateBuilder
 import org.bouncycastle.crypto.util.PrivateKeyFactory
 import org.bouncycastle.operator.bc.BcRSAContentSignerBuilder
 import org.bouncycastle.operator.{DefaultDigestAlgorithmIdentifierFinder, DefaultSignatureAlgorithmIdentifierFinder}
 import org.bouncycastle.pkcs.PKCS10CertificationRequest
 import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequestBuilder
 import org.bouncycastle.util.io.pem.PemReader
+import io.otoroshi.pki.model._
+import io.otoroshi.pki.utils.IdGenerator
 import play.api.libs.json._
 import sun.security.util.ObjectIdentifier
 import sun.security.x509.AlgorithmId
@@ -36,9 +33,9 @@ import scala.collection.SortedMap
 import scala.concurrent.{ExecutionContext, Future}
 import scala.util.{Failure, Random, Success, Try}
 
-object model {
+import utils.SSLImplicits._
 
-  import utils.SSLImplicits._
+object model {
 
   case class GenKeyPairQuery(algo: String = "rsa", size: Int = 2048) {
     def json: JsValue = GenKeyPairQuery.format.writes(this)
@@ -52,15 +49,17 @@ object model {
   }
 
   case class GenCsrQuery(
-      hosts: Seq[String],
-      key: GenKeyPairQuery,
-      name: Map[String, String],
+      hosts: Seq[String] = Seq.empty,
+      key: GenKeyPairQuery = GenKeyPairQuery(),
+      name: Map[String, String] = Map.empty,
+      subject: Option[String] = None,
       client: Boolean = false,
       ca: Boolean = false,
       days: Int = 365,
       signatureAlg: String = "SHA256WithRSAEncryption",
       digestAlg: String = "SHA-256"
   ) {
+    def subj: String = subject.getOrElse(name.map(t => s"${t._1}=${t._2}").mkString(","))
     def json: JsValue = GenCsrQuery.format.writes(this)
   }
   object GenCsrQuery {
@@ -69,7 +68,8 @@ object model {
         GenCsrQuery(
           hosts = (json \ "hosts").asOpt[Seq[String]].getOrElse(Seq.empty),
           key = (json \ "key").asOpt[JsValue].flatMap(v => GenKeyPairQuery.fromJson(v).toOption).getOrElse(GenKeyPairQuery()),
-          name = (json \ "name").as[Map[String, String]],
+          name = (json \ "name").asOpt[Map[String, String]].getOrElse(Map.empty),
+          subject = (json \ "subject").asOpt[String],
           client = (json \ "client").asOpt[Boolean].getOrElse(false),
           ca = (json \ "ca").asOpt[Boolean].getOrElse(false),
           days = (json \ "days").asOpt[Int].getOrElse(365),
@@ -85,6 +85,7 @@ object model {
         "hosts" -> o.hosts,
         "key" -> o.key.json,
         "name" -> o.name,
+        "subject" -> o.subject.map(JsString.apply).getOrElse(JsNull).as[JsValue],
         "client" -> o.client,
         "ca" -> o.ca,
         "days" -> o.days,
@@ -124,13 +125,12 @@ object model {
     def chain: String = s"${cert.asPem}\n${ca.asPem}\n${key.asPem}\n${csr.asPem}"
   }
 
-  case class SignCertResponse(cert: X509Certificate, csr: PKCS10CertificationRequest, ca: X509Certificate) {
+  case class SignCertResponse(cert: X509Certificate, csr: PKCS10CertificationRequest, ca: Option[X509Certificate]) {
     def json: JsValue = Json.obj(
       "cert" -> cert.asPem,
       "csr" -> csr.asPem,
-      "ca" -> ca.asPem
-    )
-    def chain: String = s"${cert.asPem}\n${ca.asPem}\n${csr.asPem}"
+    ) ++ ca.map(c => Json.obj("ca" -> c.asPem)).getOrElse(Json.obj())
+    def chain: String = s"${cert.asPem}\n${ca.map(_.asPem + "\n").getOrElse("")}${csr.asPem}"
   }
 
   case class PkiToolConfig(ca: X509Certificate, caKey: PrivateKey, snowflakeSeed: Long) {
@@ -143,7 +143,7 @@ trait Env {
   def generator: IdGenerator
 }
 
-trait Api {
+trait Pki {
 
   import utils.AsyncImplicits._
 
@@ -160,27 +160,27 @@ trait Api {
   }
 
   // gencert          generate a private key and a certificate
-  def genCert(query: ByteString)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, GenCertResponse]] = GenCsrQuery.fromJson(Json.parse(query.utf8String)) match {
+  def genCert(query: ByteString, ca: Boolean)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, GenCertResponse]] = GenCsrQuery.fromJson(Json.parse(query.utf8String)) match {
     case Left(err) => Left(err).future
-    case Right(q)  => genCert(q)
+    case Right(q)  => genCert(q, ca)
   }
 
   // sign             signs a certificate
-  def signCert(csr: ByteString)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, SignCertResponse]] = {
+  def signCert(csr: ByteString, ca: Boolean)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, SignCertResponse]] = {
     val pemReader = new PemReader(new StringReader(csr.utf8String))
     val pemObject = pemReader.readPemObject()
     val _csr = new PKCS10CertificationRequest(pemObject.getContent)
     pemReader.close()
-    signCert(_csr, false)
+    signCert(_csr, false, ca)
   }
 
   // selfsign         generates a self-signed certificate
-  def selfSignCert(csr: ByteString)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, SignCertResponse]] = {
+  def selfSignCert(csr: ByteString, ca: Boolean)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, SignCertResponse]] = {
     val pemReader = new PemReader(new StringReader(csr.utf8String))
     val pemObject = pemReader.readPemObject()
     val _csr = new PKCS10CertificationRequest(pemObject.getContent)
     pemReader.close()
-    signCert(_csr, true)
+    signCert(_csr, true, ca)
   }
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -194,13 +194,13 @@ trait Api {
   def genCsr(query: GenCsrQuery)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, GenCsrResponse]]
 
   // gencert          generate a private key and a certificate
-  def genCert(query: GenCsrQuery)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, GenCertResponse]]
+  def genCert(query: GenCsrQuery, ca: Boolean)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, GenCertResponse]]
 
   // sign             signs a certificate
-  def signCert(csr: PKCS10CertificationRequest, self: Boolean)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, SignCertResponse]]
+  def signCert(csr: PKCS10CertificationRequest, self: Boolean, ca: Boolean)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, SignCertResponse]]
 }
 
-class BouncyCastleApi extends Api {
+class BouncyCastlePki extends Pki {
 
   import utils.AsyncImplicits._
 
@@ -226,14 +226,13 @@ class BouncyCastleApi extends Api {
           val signatureAlgorithm = new DefaultSignatureAlgorithmIdentifierFinder().find(query.signatureAlg)
           val digestAlgorithm = new DefaultDigestAlgorithmIdentifierFinder().find(query.digestAlg)
           val signer = new BcRSAContentSignerBuilder(signatureAlgorithm, digestAlgorithm).build(privateKey)
-
           val names = new GeneralNames(query.hosts.map(name => new GeneralName(GeneralName.dNSName, name)).toArray)
-          val csrBuilder = new JcaPKCS10CertificationRequestBuilder(new X500Name(query.name.map(t => s"${t._1}=${t._2}").mkString(", ")), env.config.ca.getPublicKey)
+          val csrBuilder = new JcaPKCS10CertificationRequestBuilder(new X500Name(query.subj), env.config.ca.getPublicKey)
           val extensionsGenerator = new ExtensionsGenerator
-          extensionsGenerator.addExtension(Extension.basicConstraints, true, new BasicConstraints(false)) // TODO: handle generating ca ?
+          extensionsGenerator.addExtension(Extension.basicConstraints, true, new BasicConstraints(query.ca))
           extensionsGenerator.addExtension(Extension.keyUsage, true, new KeyUsage(KeyUsage.digitalSignature | KeyUsage.keyEncipherment))
           extensionsGenerator.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(Seq(KeyPurposeId.id_kp_serverAuth, KeyPurposeId.id_kp_clientAuth).toArray)) // TODO:
-          // extensionsGenerator.addExtension(Extension.subjectKeyIdentifier, false, ???) // TODO:
+          extensionsGenerator.addExtension(Extension.authorityKeyIdentifier, false, new AuthorityKeyIdentifier(new GeneralNames(new GeneralName(new X509Name(env.config.ca.getSubjectX500Principal.getName))), env.config.ca.getSerialNumber))
           extensionsGenerator.addExtension(Extension.subjectAlternativeName, false, names)
           csrBuilder.addAttribute(PKCSObjectIdentifiers.pkcs_9_at_extensionRequest /* x509Certificate */ , extensionsGenerator.generate)
           csrBuilder.build(signer)
@@ -246,12 +245,12 @@ class BouncyCastleApi extends Api {
   }
 
   // gencert          generate a private key and a certificate
-  override def genCert(query: GenCsrQuery)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, GenCertResponse]] = {
+  override def genCert(query: GenCsrQuery, ca: Boolean)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, GenCertResponse]] = {
     (for {
       csr <- genCsr(query)
       cert <- csr match {
         case Left(err) => FastFuture.successful(Left(err))
-        case Right(_csr) => signCert(_csr.csr, false)
+        case Right(_csr) => signCert(_csr.csr, false, ca)
       }
     } yield cert match {
       case Left(err) => Left(err)
@@ -264,48 +263,45 @@ class BouncyCastleApi extends Api {
   }
 
   // sign             signs a certificate
-  override def signCert(csr: PKCS10CertificationRequest, self: Boolean)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, SignCertResponse]] = {
-
-    import java.security.SecureRandom
-
-    import org.bouncycastle.asn1.x500.X500Name
-    import org.bouncycastle.asn1.x509.{AuthorityKeyIdentifier, BasicConstraints, GeneralName, GeneralNames, X509Name}
-    import org.bouncycastle.cert.X509v3CertificateBuilder
-    import org.bouncycastle.operator.bc.BcRSAContentSignerBuilder
-    val issuer = new X500Name(env.config.ca.getSubjectX500Principal.getName)
-    val serial = new java.math.BigInteger(32, new SecureRandom)
-    val from = new java.util.Date
-    val to = new java.util.Date(System.currentTimeMillis + (365 * 86400000L))
-
-    val certgen = new X509v3CertificateBuilder(issuer, serial, from, to, csr.getSubject, csr.getSubjectPublicKeyInfo)
-    certgen.addExtension(Extension.basicConstraints, true, new BasicConstraints(false))
-    // certgen.addExtension(Extension.subjectKeyIdentifier, true, new SubjectKeyIdentifier(csr.getSubjectPublicKeyInfo.))
-    certgen.addExtension(Extension.authorityKeyIdentifier, false, new AuthorityKeyIdentifier(new GeneralNames(new GeneralName(new X509Name(env.config.ca.getSubjectX500Principal.getName))), env.config.ca.getSerialNumber))
-    certgen.addExtension(Extension.keyUsage, true, new KeyUsage(KeyUsage.digitalSignature | KeyUsage.keyEncipherment))
-    certgen.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(Seq(KeyPurposeId.id_kp_serverAuth, KeyPurposeId.id_kp_clientAuth).toArray))
-
-    // certgen.addExtension(Extension.subjectAlternativeName, false, names)
-
-
-    val signatureAlgorithm = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA256WithRSAEncryption")
-    val digestAlgorithm = new DefaultDigestAlgorithmIdentifierFinder().find("SHA-256")
-    val signer = new BcRSAContentSignerBuilder(signatureAlgorithm, digestAlgorithm).build(PrivateKeyFactory.createKey(env.config.caKey.getEncoded))
-    val holder = certgen.build(signer)
-    val certencoded = holder.toASN1Structure.getEncoded
-    val certificateFactory: CertificateFactory = CertificateFactory.getInstance("X.509")
-    val cert = certificateFactory
-      .generateCertificate(new ByteArrayInputStream(certencoded))
-      .asInstanceOf[X509Certificate]
-    Right(SignCertResponse(cert, csr, env.config.ca)).future
+  override def signCert(csr: PKCS10CertificationRequest, self: Boolean, ca: Boolean)(implicit env: Env, ec: ExecutionContext, mat: Materializer): Future[Either[String, SignCertResponse]] = {
+    Try {
+      val issuer = if (ca) csr.getSubject else new X500Name(env.config.ca.getSubjectX500Principal.getName)
+      val serial = new java.math.BigInteger(32, new SecureRandom)
+      val from = new java.util.Date
+      val to = new java.util.Date(System.currentTimeMillis + (365 * 86400000L))
+      val certgen = new X509v3CertificateBuilder(issuer, serial, from, to, csr.getSubject, csr.getSubjectPublicKeyInfo)
+      csr.getAttributes.foreach(attr => {
+        attr.getAttributeValues.collect {
+          case exts: Extensions => {
+            exts.getExtensionOIDs.map(id => exts.getExtension(id)).filter(_ != null)/*.filter(_.getExtnId.getId == "2.5.29.17")*/.foreach { ext =>
+              certgen.addExtension(ext.getExtnId, ext.isCritical, ext.getParsedValue)
+            }
+          }
+        }
+      })
+      // val signatureAlgorithm = new DefaultSignatureAlgorithmIdentifierFinder().find("SHA256WithRSAEncryption")
+      val digestAlgorithm = new DefaultDigestAlgorithmIdentifierFinder().find("SHA-256")
+      val signer = new BcRSAContentSignerBuilder(csr.getSignatureAlgorithm, digestAlgorithm).build(PrivateKeyFactory.createKey(env.config.caKey.getEncoded))
+      val holder = certgen.build(signer)
+      val certencoded = holder.toASN1Structure.getEncoded
+      val certificateFactory: CertificateFactory = CertificateFactory.getInstance("X.509")
+      val cert = certificateFactory
+        .generateCertificate(new ByteArrayInputStream(certencoded))
+        .asInstanceOf[X509Certificate]
+      cert
+    } match {
+      case Failure(err) => Left(err.getMessage).future
+      case Success(cert) => Right(SignCertResponse(cert, csr, if (ca) None else Some(env.config.ca))).future
+    }
   }
 }
 
-class Server(env: Env) {
+class Server(pki: Pki, env: Env) {
   def start(): Unit = ???
   def stop(): Unit = ???
 }
 
-class ProdEnv() extends Env {
+class FakeEnv() extends Env {
   val _config = {
     val caContent = utils.base64Decode(Files.readString(new File("/Users/mathieuancelin/projects/cfssl/test-ca/ca.pem").toPath).replace(utils.PemHeaders.BeginCertificate, "").replace(utils.PemHeaders.EndCertificate, ""))
     val cc = Files.readString(new File("/Users/mathieuancelin/projects/cfssl/test-ca/ca-key-e.pem").toPath).replace(utils.PemHeaders.BeginPrivateKey, "").replace(utils.PemHeaders.EndPrivateKey, "").replace(utils.PemHeaders.BeginPrivateRSAKey, "").replace(utils.PemHeaders.EndPrivateRSAKey, "")
@@ -330,11 +326,17 @@ class ProdEnv() extends Env {
   override def generator: IdGenerator = IdGenerator(config.snowflakeSeed)
 }
 
+class ProdEnv() extends Env {
+  override def config: PkiToolConfig = ???
+  override def generator: IdGenerator = ???
+}
+
 object PkiTools {
 
   def startServer(): Unit = {
-    val env = new ProdEnv()
-    val server = new Server(env)
+    val env = new FakeEnv()
+    val pki = new BouncyCastlePki()
+    val server = new Server(pki, env)
     server.start()
     Runtime.getRuntime.addShutdownHook(new Thread(new Runnable {
       override def run(): Unit = server.stop()
@@ -342,21 +344,27 @@ object PkiTools {
   }
 
   def main(args: Array[String]): Unit = {
-    val system = ActorSystem("pki-tools")
-    implicit val env = new ProdEnv()
+
+    implicit val system = ActorSystem("pki-tools")
     implicit val ec = system.dispatcher
     implicit val mat = Materializer.createMaterializer(system)
-    val api = new BouncyCastleApi()
-    api.genCert(GenCsrQuery(
-      hosts = Seq("www.oto.tools"),
+
+    implicit val env = new FakeEnv()
+    val pki = new BouncyCastlePki()
+
+    pki.genCert(GenCsrQuery(
+      hosts = Seq("www.oto.tools", "api.oto.tools"),
       key = GenKeyPairQuery(),
       name = SortedMap(
         "O" -> "Otoroshi",
         "C" -> "FR"
       ).toMap
-    )).map {
+    ), false).map {
       case Left(err) => println(s"ERROR: $err")
-      case Right(resp) => println(resp.chain) //println(Json.prettyPrint(resp.json))
+      case Right(resp) =>
+        // println("done !")
+        Files.writeString(new File("/Users/mathieuancelin/projects/cfssl/test-ca/bundle.pem").toPath, resp.cert.asPem)
+        // println(Json.prettyPrint(resp.json))
     }
   }
 }

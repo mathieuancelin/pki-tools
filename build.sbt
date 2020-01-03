@@ -2,13 +2,14 @@ import Dependencies._
 
 ThisBuild / scalaVersion     := "2.12.8"
 ThisBuild / version          := "1.0.0-dev"
-ThisBuild / organization     := "io.otoroshi.ssl"
+ThisBuild / organization     := "io.otoroshi.pki"
 ThisBuild / organizationName := "pki-tools"
 
 lazy val root = (project in file("."))
   .settings(
     name := "pki-tools",
-    mainClass in (Compile, run) := Some("io.otoroshi.ssl.pki.PkiTools"),
+    mainClass in (Compile, run) := Some("io.otoroshi.pki.PkiTools"),
+    mainClass in reStart := Some("io.otoroshi.pki.PkiTools"),
     libraryDependencies ++= Seq(
       "com.github.blemale"       %% "scaffeine"                % "3.1.0",
       "org.shredzone.acme4j"     %  "acme4j-client"            % "2.8",
