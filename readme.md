@@ -2,10 +2,10 @@
 
 a simple REST API to generate KeyPairs, CSR and Certificates based on a CA certificate and private key
 
-## Run
+## Run in dev mode
 
 ```sh
-sbt run -Dpki.ca=/path/to/ca.pem, -Dpki.caKey=/path/to/ca-key.pem
+sbt run --- -Dpki.ca=/path/to/ca.pem, -Dpki.caKey=/path/to/ca-key.pem
 ```
 
 ## Try

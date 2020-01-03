@@ -538,6 +538,7 @@ class ProdEnv(conf: Config) extends Env {
     val (finalCa, finalKey) = if (!autoGenerate) {
       val caContent = {
         val caPath = getString("pki.ca").getOrElse("./ca.pem")
+        println(s"Loading ca cert. from $caPath")
         val caFile = new File(caPath)
         if (caFile.exists()) {
           utils.base64Decode(Files.readString(caFile.toPath).replace(utils.PemHeaders.BeginCertificate, "").replace(utils.PemHeaders.EndCertificate, ""))
@@ -547,9 +548,11 @@ class ProdEnv(conf: Config) extends Env {
       }
       val caKeyContent = {
         val caKeyPath = getString("pki.caKey").getOrElse("./ca-key.pem")
+        println(s"Loading ca key from $caKeyPath")
         val caKeyFile = new File(caKeyPath)
         if (caKeyFile.exists()) {
-          utils.base64Decode(Files.readString(caKeyFile.toPath).replace(utils.PemHeaders.BeginPrivateKey, "").replace(utils.PemHeaders.EndPrivateKey, "").replace(utils.PemHeaders.BeginPrivateRSAKey, "").replace(utils.PemHeaders.EndPrivateRSAKey, ""))
+          val content = Files.readString(caKeyFile.toPath).replace(utils.PemHeaders.BeginPrivateKey, "").replace(utils.PemHeaders.EndPrivateKey, "").replace(utils.PemHeaders.BeginPrivateRSAKey, "").replace(utils.PemHeaders.EndPrivateRSAKey, "")
+          utils.base64Decode(content)
         } else {
           utils.base64Decode(caKeyPath.replace(utils.PemHeaders.BeginPrivateKey, "").replace(utils.PemHeaders.EndPrivateKey, "").replace(utils.PemHeaders.BeginPrivateRSAKey, "").replace(utils.PemHeaders.EndPrivateRSAKey, ""))
         }
