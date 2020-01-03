@@ -2,10 +2,55 @@
 
 a simple REST API to generate KeyPairs, CSR and Certificates based on a CA certificate and private key
 
+## Build and run
+
+```sh
+sbt assembly
+mv ./target/scala-2.12/pki-tools.jar ./pki-tools.jar
+java -Dpki.ca=/path/to/ca.pem, -Dpki.caKey=/path/to/ca-key.pem -jar pki-tools.jar
+```
+
 ## Run in dev mode
 
 ```sh
 sbt run --- -Dpki.ca=/path/to/ca.pem, -Dpki.caKey=/path/to/ca-key.pem
+```
+
+## API
+
+```
+GET    --       /api/pki/ca
+POST   CSR      /api/pki/cert
+POST   CSR      /api/pki/csr
+POST   KEY      /api/pki/keypair
+POST   CSRPEM   /api/pki/_sign
+```
+
+`CSR` format
+
+```json
+{
+  "hosts" : [ ... ],
+  "key" : {
+    "algo" : "rsa",
+    "size" : 2048
+  },
+  "name" : {
+    "C" : "foo",
+    "OU" : "bar"
+  },
+  "signatureAlg" : "SHA256WithRSAEncryption",
+  "digestAlg" : "SHA-256"
+}
+```
+
+`KEY` format
+
+```json
+{
+  "algo" : "rsa",
+  "size" : 2048
+}
 ```
 
 ## Try
