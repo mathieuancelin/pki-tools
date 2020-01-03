@@ -1,0 +1,945 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="f6a98368-9e3b-41e0-9722-5d39578930c5" name="Default" comment="" />
+    <ignored path="$PROJECT_DIR$/target/" />
+    <ignored path="$PROJECT_DIR$/project/project/target/" />
+    <ignored path="$PROJECT_DIR$/project/target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="api.scala" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/scala/example/api.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="216">
+              <caret line="126" column="108" lean-forward="true" selection-start-line="126" selection-start-column="108" selection-end-line="126" selection-end-column="108" />
+              <folding>
+                <element signature="e#29#86#0" expanded="true" />
+                <element signature="e#2452#2466#0" />
+                <element signature="e#349#774#1" />
+                <element signature="e#13388#13421#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.sbt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/build.sbt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="150">
+              <caret line="10" column="69" selection-start-line="10" selection-start-column="69" selection-end-line="10" selection-end-column="69" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EncryptedPrivateKeyInfo.java" pinned="false" current-in-tab="false">
+        <entry file="jar:///Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/lib/src.zip!/java.base/javax/crypto/EncryptedPrivateKeyInfo.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="269">
+              <caret line="245" column="23" selection-start-line="245" selection-start-column="23" selection-end-line="245" selection-end-column="23" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PKCS8EncodedKeySpec.java" pinned="false" current-in-tab="false">
+        <entry file="jar:///Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/lib/src.zip!/java.base/java/security/spec/PKCS8EncodedKeySpec.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="570">
+              <caret line="61" column="32" selection-start-line="61" selection-start-column="13" selection-end-line="61" selection-end-column="32" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EncodedKeySpec.java" pinned="false" current-in-tab="false">
+        <entry file="jar:///Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/lib/src.zip!/java.base/java/security/spec/EncodedKeySpec.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="276">
+              <caret line="42" column="51" selection-start-line="42" selection-start-column="51" selection-end-line="42" selection-end-column="51" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="KeySpec.java" pinned="false" current-in-tab="false">
+        <entry file="jar:///Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/lib/src.zip!/java.base/java/security/spec/KeySpec.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="570">
+              <caret line="61" column="17" selection-start-line="61" selection-start-column="17" selection-end-line="61" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ActorMaterializer.scala" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/com/typesafe/akka/akka-stream_2.12/2.6.1/akka-stream_2.12-2.6.1-sources.jar!/akka/stream/ActorMaterializer.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="246">
+              <caret line="114" column="53" selection-start-line="114" selection-start-column="41" selection-end-line="114" selection-end-column="53" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="X509CertificateHolder.java" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.64/bcpkix-jdk15on-1.64-sources.jar!/org/bouncycastle/cert/X509CertificateHolder.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="276">
+              <caret line="229" column="17" selection-start-line="229" selection-start-column="17" selection-end-line="229" selection-end-column="17" />
+              <folding>
+                <element signature="e#6342#6343#0" expanded="true" />
+                <element signature="e#6380#6381#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Certificate.java" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/Certificate.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="946">
+              <caret line="71" column="21" selection-start-line="71" selection-start-column="21" selection-end-line="71" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TBSCertificate.java" pinned="false" current-in-tab="false">
+        <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/TBSCertificate.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1562">
+              <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>extensions</find>
+      <find>GenSelfCertQuery</find>
+      <find>FastFu</find>
+      <find>\n\n</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>SelfSignCertQuery</replace>
+      <replace>\n</replace>
+    </replaceStrings>
+  </component>
+  <component name="GradleLocalSettings">
+    <option name="modificationStamps">
+      <map>
+        <entry key="$USER_HOME$/Desktop/gs-gradle/sb-essentials" value="1477385076000" />
+        <entry key="$USER_HOME$/Desktop/json-lib-javaslang" value="1485984120000" />
+        <entry key="$USER_HOME$/Desktop/sb-essentials" value="1477381982000" />
+        <entry key="$USER_HOME$/Desktop/sb-essentials/example-2" value="1480243597000" />
+        <entry key="$USER_HOME$/Desktop/webstack" value="1481789682000" />
+        <entry key="$USER_HOME$/Downloads/demo 2" value="1484209122000" />
+        <entry key="$USER_HOME$/Downloads/socialnetwork" value="1484210482000" />
+        <entry key="$USER_HOME$/Dropbox/current-projects/a-team" value="2909705704000" />
+        <entry key="$USER_HOME$/Dropbox/current-projects/microservices" value="2916245656000" />
+        <entry key="$USER_HOME$/Dropbox/current-projects/sge-teams/c-team" value="2910996134000" />
+        <entry key="$USER_HOME$/Dropbox/current-projects/speedhud-server" value="2929417160000" />
+        <entry key="$USER_HOME$/serli/OpenWineDatabase/javaslang-code" value="2980737456000" />
+        <entry key="$USER_HOME$/serli/altima/altima-api" value="2950308666000" />
+        <entry key="$USER_HOME$/serli/altima/altima-extranet-flottes" value="2950327156000" />
+        <entry key="$USER_HOME$/serli/hubshare/backend" value="1463732648000" />
+        <entry key="$USER_HOME$/serli/hubshare/test-async" value="1463131649000" />
+        <entry key="$USER_HOME$/serli/maifx/InShare/inshare-pricing" value="2971961576000" />
+        <entry key="$USER_HOME$/serli/maifx/MonClubFacile/MonClubFacile-collects" value="2979697776000" />
+        <entry key="$USER_HOME$/serli/maifx/MonClubFacile/MonClubFacile-organizations-sb" value="2975713136000" />
+        <entry key="$USER_HOME$/serli/maifx/Opun/opun-config" value="1490628429000" />
+        <entry key="$USER_HOME$/serli/maifx/Opun/opun-geosearch" value="1488902785000" />
+        <entry key="$USER_HOME$/serli/maifx/Opun/opun-resilience-tools" value="2977797479000" />
+        <entry key="$USER_HOME$/serli/maifx/blockchain/blockchain-demo" value="2969640733000" />
+        <entry key="$USER_HOME$/serli/maifx/elastic-java-rest-client" value="2974338116000" />
+        <entry key="$USER_HOME$/serli/maifx/forwarder" value="2969488360000" />
+      </map>
+    </option>
+    <option name="projectSyncType">
+      <map>
+        <entry key="$USER_HOME$/Desktop/bureau-eletronique-web/be-web/app1" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/bureau-eletronique-web/be-web/context" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/bureau-eletronique-web/be-web/directory" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/bureau-eletronique-web/be-web/events" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/bureau-eletronique-web/be-web/home" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/bureau-eletronique-web/be-web/session" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/json-lib" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/json-lib-javaslang" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/demo 3" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../formation-scala" value="PREVIEW" />
+      </map>
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/main/scala/example/certificates.scala" />
+        <option value="$PROJECT_DIR$/src/main/scala/example/modelss.scala" />
+        <option value="$PROJECT_DIR$/build.sbt" />
+        <option value="$PROJECT_DIR$/src/main/scala/example/api.scala" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodePackageJsonFileManager">
+    <packageJsonPaths />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="y" value="23" />
+    <option name="width" value="1680" />
+    <option name="height" value="975" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="AndroidView" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="pki-tools" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pki-tools" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pki-tools" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pki-tools" type="462c0819:PsiDirectoryNode" />
+              <item name="project" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pki-tools" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pki-tools" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pki-tools" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pki-tools" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pki-tools" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pki-tools" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="scala" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="pki-tools" type="b2602c69:ProjectViewProjectNode" />
+              <item name="pki-tools" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="scala" type="462c0819:PsiDirectoryNode" />
+              <item name="example" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.2678161" />
+    <property name="settings.editor.selected.configurable" value="sbt.project.settings.configurable" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <patterns />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
+      <module name="pki-tools_9766" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="WORKING_DIRECTORY" />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <properties />
+      <listeners />
+    </configuration>
+  </component>
+  <component name="SbtLocalSettings">
+    <option name="availableProjects">
+      <map>
+        <entry>
+          <key>
+            <ExternalProjectPojo>
+              <option name="name" value="pki-tools" />
+              <option name="path" value="$PROJECT_DIR$" />
+            </ExternalProjectPojo>
+          </key>
+          <value>
+            <list>
+              <ExternalProjectPojo>
+                <option name="name" value="root" />
+                <option name="path" value="$PROJECT_DIR$" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
+                <option name="name" value="root-build" />
+                <option name="path" value="$PROJECT_DIR$/project" />
+              </ExternalProjectPojo>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="modificationStamps">
+      <map>
+        <entry key="$USER_HOME$/Desktop/bitbucketdarva-resiliation_electronique-34cd704cba89" value="5919659360000" />
+        <entry key="$USER_HOME$/Desktop/bitbucketdarva-resiliation_electronique-e41f498741e3" value="5916785520000" />
+        <entry key="$USER_HOME$/Desktop/emn/bidon" value="1461596286000" />
+        <entry key="$USER_HOME$/Desktop/emn/data-eater" value="1461877306000" />
+        <entry key="$USER_HOME$/Desktop/emn/live" value="1461745332000" />
+        <entry key="$USER_HOME$/Desktop/emn/todo-done-25" value="1461861104000" />
+        <entry key="$USER_HOME$/Desktop/good-old-play" value="1474536297000" />
+        <entry key="$USER_HOME$/Desktop/gopf" value="1481036427000" />
+        <entry key="$USER_HOME$/Desktop/gopf-trial" value="1484549959000" />
+        <entry key="$USER_HOME$/Desktop/perceptron" value="1469167135000" />
+        <entry key="$USER_HOME$/Desktop/reactivecouchbase-rs-core" value="1486542786000" />
+        <entry key="$USER_HOME$/Desktop/simple-elastic-client" value="1489481509000" />
+        <entry key="$USER_HOME$/Desktop/speakerz" value="1477588748000" />
+        <entry key="$USER_HOME$/Desktop/tmp/ReactiveCouchbase-core-sdk2" value="1452674806000" />
+        <entry key="$USER_HOME$/Desktop/webstack/scala" value="1481970742000" />
+        <entry key="$USER_HOME$/Downloads/resiliation_electronique" value="2909130028000" />
+        <entry key="$USER_HOME$/Dropbox/current-projects/couchbase/ReactiveCouchbase/client-lib" value="1457619406000" />
+        <entry key="$USER_HOME$/Dropbox/current-projects/couchbase/ReactiveCouchbase/concurrent-lib" value="1456252265000" />
+        <entry key="$USER_HOME$/Dropbox/current-projects/couchbase/ReactiveCouchbase/json-lib" value="1414326752000" />
+        <entry key="$USER_HOME$/Dropbox/current-projects/couchbase/ReactiveCouchbase/sql-lib" value="1462518442000" />
+        <entry key="$USER_HOME$/Dropbox/current-projects/jenkins-wall" value="1468935434000" />
+        <entry key="$USER_HOME$/Dropbox/current-projects/ml-diagnosis/toy" value="1449664785000" />
+        <entry key="$USER_HOME$/Dropbox/current-projects/my-first-lagom" value="1457626450000" />
+        <entry key="$USER_HOME$/Dropbox/current-projects/simple-elastic-client" value="1473749271000" />
+        <entry key="$USER_HOME$/Dropbox/current-projects/the-ram-project" value="1475507048000" />
+        <entry key="$PROJECT_DIR$/build.sbt" value="2022870031" />
+        <entry key="$PROJECT_DIR$/project/Dependencies.scala" value="1406135133" />
+        <entry key="$PROJECT_DIR$/project/build.properties" value="253751098" />
+        <entry key="$USER_HOME$/serli/OpenWineDatabase/WIP-OpenWinesDatabase" value="1490191170000" />
+        <entry key="$USER_HOME$/serli/OpenWineDatabase/live" value="1491393183000" />
+        <entry key="$USER_HOME$/serli/OpenWineDatabase/prelive" value="1491379712000" />
+        <entry key="$USER_HOME$/serli/hubshare/blog" value="1459748652000" />
+        <entry key="$USER_HOME$/serli/hubshare/chat-bot" value="1466598564000" />
+        <entry key="$USER_HOME$/serli/hubshare/elGenerator" value="1467615780000" />
+        <entry key="$USER_HOME$/serli/hubshare/frontend" value="1465893870000" />
+        <entry key="$USER_HOME$/serli/hubshare/oauth-experimentations/github-connect" value="1462893220000" />
+        <entry key="$USER_HOME$/serli/hubshare/oauth-experimentations/play-oauth2-server" value="1462874054000" />
+        <entry key="$USER_HOME$/serli/hubshare/oauth-experimentations/play-silhouette-credentials-seed" value="1462872220000" />
+        <entry key="$USER_HOME$/serli/hubshare/oauth-experimentations/play-silhouette-seed" value="1462872761000" />
+        <entry key="$USER_HOME$/serli/hubshare/oauth-experimentations/scala-oauth2-provider-example-skinny-orm" value="1462871288000" />
+        <entry key="$USER_HOME$/serli/hubshare/oauth-experimentations/share-connect" value="1462872055000" />
+        <entry key="$USER_HOME$/serli/hubshare/partner-hub" value="1465215413000" />
+        <entry key="$USER_HOME$/serli/hubshare/partners-catalog" value="1476779712000" />
+        <entry key="$USER_HOME$/serli/hubshare/users" value="1467115923000" />
+        <entry key="$USER_HOME$/serli/maifx/InShare/inshare-frontend" value="1485980402000" />
+        <entry key="$USER_HOME$/serli/maifx/MonClubFacile-frontend" value="1483611165000" />
+        <entry key="$USER_HOME$/serli/maifx/MonClubFacile/MonClubFacile-members" value="1487856452000" />
+        <entry key="$USER_HOME$/serli/maifx/MonClubFacile/MonClubFacile-organizations" value="1484224798000" />
+        <entry key="$USER_HOME$/serli/maifx/MonClubFacile/MonClubFacile-synchronizer" value="1487856269000" />
+        <entry key="$USER_HOME$/serli/maifx/Opun/open-gateway-poc" value="1484075427000" />
+        <entry key="$USER_HOME$/serli/maifx/Opun/opun-analytics" value="1486043967000" />
+        <entry key="$USER_HOME$/serli/maifx/Opun/opun-otoroshi" value="1489500089000" />
+        <entry key="$USER_HOME$/serli/maifx/mcf-gatling" value="1485765870000" />
+        <entry key="$USER_HOME$/serli/maifx/opun-gateway" value="1483355056000" />
+        <entry key="$USER_HOME$/serli/scala-batches" value="1467996928000" />
+        <entry key="$USER_HOME$/workspace/serli/resiliation_electronique" value="2910530366000" />
+      </map>
+    </option>
+    <option name="projectSyncType">
+      <map>
+        <entry key="$USER_HOME$/Desktop/daikoku" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/daikoku/daikoku" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/devoxx-game" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/nio" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/nio/nio-server" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/otoroshi-migration/otoroshi/otoroshi" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/otoroshi/akka-http-reverse-proxy" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/reverse-proxy" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/scalajs-react/scalajs-workshop" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/test-interrupt-zio/test-interrupt-zio" value="PREVIEW" />
+        <entry key="$USER_HOME$/Desktop/test-zio" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../blaze-http-test" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../daikoku/daikoku" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../formation-scala" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../izanami" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../test-zio-env/test-zio-env" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../tests-ssl/tests-ssl" value="PREVIEW" />
+      </map>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f6a98368-9e3b-41e0-9722-5d39578930c5" name="Default" comment="" />
+      <created>1577991753161</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1577991753161</updated>
+      <workItem from="1577991755797" duration="15834000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="15834000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="23" width="1680" height="975" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info anchor="right" id="Palette" />
+      <window_info anchor="right" id="sbt" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="right" id="Maven Projects" />
+      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
+      <window_info id="Capture Tool" />
+      <window_info id="Designer" />
+      <window_info anchor="bottom" id="Build" weight="0.32982457" />
+      <window_info anchor="right" id="Database" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info id="UI Designer" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="SBT Console" />
+      <window_info anchor="right" id="Palette&#9;" />
+      <window_info id="Image Layers" />
+      <window_info anchor="right" id="Capture Analysis" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1910867" />
+      <window_info anchor="bottom" id="sbt-shell-toolwindow" />
+      <window_info anchor="right" id="Gradle" />
+      <window_info anchor="right" id="Theme Preview" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <option name="time" value="1" />
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/project/Dependencies.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="7" selection-start-line="2" selection-start-column="7" selection-end-line="2" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/example/Hello.scala">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/x509/X509V1CertificateGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="39" column="65" selection-start-line="39" selection-start-column="41" selection-end-line="39" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.64/bcpkix-jdk15on-1.64-sources.jar!/org/bouncycastle/cert/X509v1CertificateBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="497">
+          <caret line="77" column="45" selection-start-line="77" selection-start-column="20" selection-end-line="77" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/V1TBSCertificateGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="35" lean-forward="true" selection-start-column="35" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/shredzone/acme4j/acme4j-client/2.8/acme4j-client-2.8-sources.jar!/org/shredzone/acme4j/Identifier.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-43">
+          <caret line="42" column="13" selection-start-line="42" selection-start-column="13" selection-end-line="42" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/pkcs/CertificationRequestInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-885">
+          <caret line="35" column="13" selection-start-line="35" selection-start-column="13" selection-end-line="35" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/pkcs/CertificationRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="148">
+          <caret line="47" column="29" lean-forward="true" selection-start-line="47" selection-start-column="29" selection-end-line="47" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.64/bcpkix-jdk15on-1.64-sources.jar!/org/bouncycastle/pkcs/PKCS10CertificationRequestBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="165" column="37" selection-start-line="165" selection-start-column="11" selection-end-line="165" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/lib/src.zip!/java.base/java/io/Reader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="435">
+          <caret line="53" column="22" selection-start-line="53" selection-start-column="22" selection-end-line="53" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/util/io/pem/PemReader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="13" column="22" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.64/bcpkix-jdk15on-1.64-sources.jar!/org/bouncycastle/pkcs/PKCS10CertificationRequest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="23" column="39" selection-start-line="23" selection-start-column="13" selection-end-line="23" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/lib/src.zip!/java.base/java/security/SecureRandom.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="740">
+          <caret line="210" column="11" selection-start-line="210" selection-start-column="11" selection-end-line="210" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.64/bcpkix-jdk15on-1.64-sources.jar!/org/bouncycastle/cert/X509v3CertificateBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="100" column="46" selection-start-line="100" selection-start-column="21" selection-end-line="100" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/X509Extension.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/KeyUsage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="393">
+          <caret line="71" column="13" lean-forward="true" selection-start-line="71" selection-start-column="13" selection-end-line="71" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/DERBitString.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-796">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.64/bcpkix-jdk15on-1.64-sources.jar!/org/bouncycastle/operator/DefaultSignatureAlgorithmIdentifierFinder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="345" column="39" selection-start-line="345" selection-start-column="39" selection-end-line="345" selection-end-column="39" />
+          <folding>
+            <element signature="e#25210#25211#0" expanded="true" />
+            <element signature="e#25253#25254#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.64/bcpkix-jdk15on-1.64-sources.jar!/org/bouncycastle/operator/DefaultDigestAlgorithmIdentifierFinder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-86">
+          <caret line="21" column="13" selection-start-line="21" selection-start-column="13" selection-end-line="21" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/shredzone/acme4j/acme4j-utils/2.8/acme4j-utils-2.8-sources.jar!/org/shredzone/acme4j/util/CSRBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="61" column="32" selection-start-line="61" selection-start-column="32" selection-end-line="61" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/ASN1Integer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-577">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/Time.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-150">
+          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/V3TBSCertificateGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="44" column="11" selection-start-line="44" selection-start-column="11" selection-end-line="44" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/lib/src.zip!/java.base/java/math/BigInteger.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-4727">
+          <caret line="129" column="13" selection-start-line="129" selection-start-column="13" selection-end-line="129" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/x509/X509V3CertificateGenerator.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="284">
+          <caret line="76" column="14" lean-forward="true" selection-start-line="76" selection-start-column="14" selection-end-line="76" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/X509Name.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="8535">
+          <caret line="590" column="11" selection-start-line="590" selection-start-column="11" selection-end-line="590" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x500/X500Name.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2130">
+          <caret line="152" column="11" selection-start-line="152" selection-start-column="11" selection-end-line="152" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/Extensions.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-801">
+          <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/ASN1OctetString.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="458">
+          <caret line="269" column="30" selection-start-line="269" selection-start-column="30" selection-end-line="269" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/Extension.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="424">
+          <caret line="194" column="12" lean-forward="true" selection-start-line="194" selection-start-column="12" selection-end-line="194" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/ASN1Boolean.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="33" column="29" selection-start-line="33" selection-start-column="18" selection-end-line="33" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/AuthorityKeyIdentifier.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1861">
+          <caret line="33" column="13" selection-start-line="33" selection-start-column="13" selection-end-line="33" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/x509/extension/AuthorityKeyIdentifierStructure.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="22" column="13" selection-start-line="22" selection-start-column="13" selection-end-line="22" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/ExtendedKeyUsage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="263">
+          <caret line="110" column="20" selection-start-line="110" selection-start-column="8" selection-end-line="110" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/KeyPurposeId.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="336">
+          <caret line="39" column="53" selection-start-line="39" selection-start-column="37" selection-end-line="39" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/SubjectKeyIdentifier.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="478">
+          <caret line="47" column="11" selection-start-line="47" selection-start-column="11" selection-end-line="47" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.64/bcpkix-jdk15on-1.64-sources.jar!/org/bouncycastle/operator/bc/BcRSAContentSignerBuilder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="11" column="11" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/TBSCertificate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1562">
+          <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcprov-jdk15on/1.64/bcprov-jdk15on-1.64-sources.jar!/org/bouncycastle/asn1/x509/Certificate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="946">
+          <caret line="71" column="21" selection-start-line="71" selection-start-column="21" selection-end-line="71" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/org/bouncycastle/bcpkix-jdk15on/1.64/bcpkix-jdk15on-1.64-sources.jar!/org/bouncycastle/cert/X509CertificateHolder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="229" column="17" selection-start-line="229" selection-start-column="17" selection-end-line="229" selection-end-column="17" />
+          <folding>
+            <element signature="e#6342#6343#0" expanded="true" />
+            <element signature="e#6380#6381#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.coursier/cache/v1/https/repo1.maven.org/maven2/com/typesafe/akka/akka-stream_2.12/2.6.1/akka-stream_2.12-2.6.1-sources.jar!/akka/stream/ActorMaterializer.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="246">
+          <caret line="114" column="53" selection-start-line="114" selection-start-column="41" selection-end-line="114" selection-end-column="53" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/lib/src.zip!/java.base/java/security/spec/EncodedKeySpec.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="42" column="51" selection-start-line="42" selection-start-column="51" selection-end-line="42" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/lib/src.zip!/java.base/java/security/spec/KeySpec.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="61" column="17" selection-start-line="61" selection-start-column="17" selection-end-line="61" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/lib/src.zip!/java.base/javax/crypto/EncryptedPrivateKeyInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="269">
+          <caret line="245" column="23" selection-start-line="245" selection-start-column="23" selection-end-line="245" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/lib/src.zip!/java.base/java/security/spec/PKCS8EncodedKeySpec.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="570">
+          <caret line="61" column="32" selection-start-line="61" selection-start-column="13" selection-end-line="61" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/example/models.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="30">
+          <caret line="2" column="6" selection-start-line="2" selection-start-column="6" selection-end-line="2" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.sbt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="10" column="69" selection-start-line="10" selection-start-column="69" selection-end-line="10" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/scala/example/api.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="126" column="108" lean-forward="true" selection-start-line="126" selection-start-column="108" selection-end-line="126" selection-end-column="108" />
+          <folding>
+            <element signature="e#29#86#0" expanded="true" />
+            <element signature="e#2452#2466#0" />
+            <element signature="e#349#774#1" />
+            <element signature="e#13388#13421#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2678161" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2678161" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>scala-sdk-2.12.2</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2678161" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>11</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2678161" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>pki-tools_9766</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2678161" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2678161" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
