@@ -12,11 +12,13 @@ import java.util.concurrent.atomic.{AtomicLong, AtomicReference}
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http.ServerBinding
 import akka.http.scaladsl.model._
-import akka.http.scaladsl.model.headers.Accept
+import akka.http.scaladsl.model.headers.{Accept, RawHeader}
 import akka.http.scaladsl.util.FastFuture
 import akka.http.scaladsl.{ConnectionContext, Http, HttpsConnectionContext}
 import akka.stream.Materializer
 import akka.util.ByteString
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
 import com.typesafe.config.{Config, ConfigFactory}
 import io.otoroshi.pki.models._
 import io.otoroshi.pki.utils.IdGenerator
@@ -141,7 +143,18 @@ object models {
     def chainWithCsr: String = s"${cert.asPem}\n${ca.map(_.asPem + "\n").getOrElse("")}${csr.asPem}"
   }
 
-  case class PkiToolConfig(ca: X509Certificate, caKey: PrivateKey, snowflakeSeed: Long, interface: String = "0.0.0.0", port: Int = 8443, hostname: String = "pki.oto.tools", https: Boolean = true) {
+  case class PkiToolConfig(
+      ca: X509Certificate,
+      caKey: PrivateKey,
+      snowflakeSeed: Long,
+      interface: String = "0.0.0.0",
+      port: Int = 8443,
+      hostname: String = "pki.oto.tools",
+      https: Boolean = true,
+      otoroshi: Boolean = false,
+      otoroshiSecret: String = "secret",
+      otoroshiIssuer: String = "Otoroshi"
+  ) {
     def keyPair: KeyPair = new KeyPair(ca.getPublicKey, caKey)
   }
 }
@@ -358,11 +371,33 @@ class Server(pki: Pki, env: Env) {
   private val ref = new AtomicReference[ServerBinding](null)
 
   def passWithOtoroshiAndBody(request: HttpRequest)(f: ByteString => Future[HttpResponse]): Future[HttpResponse] = {
-    request.entity.dataBytes.runFold(ByteString.empty)(_ ++ _).flatMap(bs => f(bs))
+    passWithOtoroshi(request) {
+      request.entity.dataBytes.runFold(ByteString.empty)(_ ++ _).flatMap(bs => f(bs))
+    }
   }
 
-  def passWithOtoroshi(f: => Future[HttpResponse]): Future[HttpResponse] = {
-    f
+  def passWithOtoroshi(request: HttpRequest)(f: => Future[HttpResponse]): Future[HttpResponse] = {
+    if (env.config.otoroshi) {
+      request.getHeader("Otoroshi-State") match {
+        case h if h.isEmpty => badRequest("no state !").future
+        case h if h.isPresent => {
+          val algo = Algorithm.HMAC512(env.config.otoroshiSecret)
+          Try(JWT.require(algo).withIssuer(env.config.otoroshiIssuer).build().verify(h.get().value())) match {
+            case Success(jwt) =>
+              val token = JWT.create()
+                .withAudience(env.config.otoroshiIssuer)
+                .withIssuedAt(org.joda.time.DateTime.now().toDate)
+                .withExpiresAt(org.joda.time.DateTime.now().plusSeconds(10).toDate)
+                .withClaim("state-resp", jwt.getClaim("state").asString())
+                .sign(algo)
+              f.map(r => r.copy(headers = r.headers :+ RawHeader("Otoroshi-State-Resp", token)))
+            case Failure(e) => badRequest("bad state !").future
+          }
+        }
+      }
+    } else {
+      f
+    }
   }
 
   def badRequest(err: String) = HttpResponse(
@@ -399,7 +434,7 @@ class Server(pki: Pki, env: Env) {
 
   def handle(request: HttpRequest): Future[HttpResponse] = {
     (request.method, request.uri.toRelative.path.toString()) match {
-      case (HttpMethods.GET, "/api/pki/ca") => passWithOtoroshi {
+      case (HttpMethods.GET, "/api/pki/ca") => passWithOtoroshi(request) {
         if (!request.header[Accept].exists(_.value.contains("text/plain"))) {
           HttpResponse(
             200,
@@ -447,7 +482,7 @@ class Server(pki: Pki, env: Env) {
         }
       }
       //case (HttpMethods.POST, "/api/pki/_self-sign") =>
-      case _ => passWithOtoroshi {
+      case _ => passWithOtoroshi(request) {
         notFound().future
       }
     }
@@ -591,7 +626,10 @@ class ProdEnv(conf: Config) extends Env {
       interface = getString("pki.http.interface").getOrElse("0.0.0.0"),
       port = getInt("pki.http.port").getOrElse(8443),
       hostname = getString("pki.http.hostname").getOrElse("pki.oto.tools"),
-      https = getBoolean("pki.http.https").getOrElse(true)
+      https = getBoolean("pki.http.https").getOrElse(true),
+      otoroshi = getBoolean("pki.otoroshi.enabled").getOrElse(false),
+      otoroshiSecret = getString("pki.otoroshi.secret").getOrElse("secret"),
+      otoroshiIssuer = getString("pki.otoroshi.issuer").getOrElse("Otoroshi")
     )
   }
   override def config: PkiToolConfig = _config
