@@ -29,10 +29,13 @@ lazy val root = (project in file("."))
         oldStrategy(x)
     },
     libraryDependencies ++= Seq(
-      "com.github.blemale"       %% "scaffeine"                % "3.1.0",
-      "org.shredzone.acme4j"     %  "acme4j-client"            % "2.8",
-      "org.shredzone.acme4j"     %  "acme4j-utils"             % "2.8",
-      "org.shredzone.acme4j"     %  "acme4j"                   % "2.7",
+      // "com.github.blemale"       %% "scaffeine"                % "3.1.0",
+      // "org.shredzone.acme4j"     %  "acme4j-client"            % "2.8",
+      // "org.shredzone.acme4j"     %  "acme4j-utils"             % "2.8",
+      // "org.shredzone.acme4j"     %  "acme4j"                   % "2.7",
+      "org.bouncycastle"         %  "bcprov-jdk15on"           % "1.64",
+      "org.bouncycastle"         %  "bcpkix-jdk15on"           % "1.64",
+      "org.bouncycastle"         %  "bcpg-jdk15on"             % "1.64",
       "com.typesafe.play"        %% "play-json"                % "2.6.8",
       "com.typesafe.play"        %% "play-json-joda"           % "2.6.8",
       "com.typesafe.akka"        %% "akka-http"                % "10.1.11",
