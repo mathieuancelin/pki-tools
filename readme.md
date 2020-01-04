@@ -30,12 +30,14 @@ POST   CSRPEM   /api/pki/_sign
 
 ```json
 {
-  "hosts" : [ ... ],
+  "hosts" : [ "www.foo.bar", "www2.foo.bar" ],
   "key" : {
     "algo" : "rsa",
     "size" : 2048
   },
-  "name" : {
+  "client": false,  // optional
+  "subject": "...", // optional
+  "name" : {        // optional
     "C" : "foo",
     "OU" : "bar"
   },
