@@ -699,18 +699,8 @@ object utils {
   }
 
   object SSLImplicits {
-
     implicit class EnhancedCertificate(val cert: X509Certificate) extends AnyVal {
       def asPem: String = s"${PemHeaders.BeginCertificate}\n${Base64.getEncoder.encodeToString(cert.getEncoded).grouped(64).mkString("\n")}\n${PemHeaders.EndCertificate}\n"
-      // def altNames: Seq[String] = CertInfo.getSubjectAlternativeNames(cert)
-      // def rawDomain: Option[String] = {
-      //   Option(cert.getSubjectDN.getName)
-      //     .flatMap(_.split(",").toSeq.map(_.trim).find(_.toLowerCase.startsWith("cn=")))
-      //     .map(_.replace("CN=", "").replace("cn=", ""))
-      // }
-      // def maybeDomain: Option[String] = domains.headOption
-      // def domain: String = domains.headOption.getOrElse(cert.getSubjectDN.getName)
-      // def domains: Seq[String] = (rawDomain ++ altNames).toSeq
     }
     implicit class EnhancedPublicKey(val key: PublicKey) extends AnyVal {
       def asPem: String = s"${PemHeaders.BeginPublicKey}\n${Base64.getEncoder.encodeToString(key.getEncoded).grouped(64).mkString("\n")}\n${PemHeaders.EndPublicKey}\n"
@@ -783,52 +773,4 @@ object utils {
     def extendedToken(size: Int): String = token(EXTENDED_CHARACTERS, size)
     def extendedToken: String            = token(EXTENDED_CHARACTERS, 64)
   }
-
-  /*object CertInfo {
-
-    import collection.JavaConverters._
-
-    def getSubjectAlternativeNames(certificate: X509Certificate): Seq[String] = {
-      val identities: java.util.List[String] = new java.util.ArrayList[String]
-      try {
-        val altNames: java.util.Collection[java.util.List[_]] = certificate.getSubjectAlternativeNames
-        if (altNames == null) {
-          Seq.empty
-        } else {
-          for (item <- altNames.asScala) {
-            val `type`: Integer = item.get(0).asInstanceOf[Integer]
-            if ((`type` eq 0) || (`type` eq 2)) {
-              try {
-                var decoder: ASN1InputStream = null
-                item.asScala.toArray.apply(1) match {
-                  case bytes: Array[Byte] =>
-                    decoder = new ASN1InputStream(bytes)
-                  case str: String =>
-                    identities.add(str)
-                  case _ =>
-                }
-                if (decoder != null) {
-                  var encoded: ASN1Encodable = decoder.readObject
-                  encoded = encoded.asInstanceOf[DERSequence].getObjectAt(1)
-                  encoded = encoded.asInstanceOf[DERTaggedObject].getObject
-                  encoded = encoded.asInstanceOf[DERTaggedObject].getObject
-                  val identity: String = encoded.asInstanceOf[DERUTF8String].getString
-                  identities.add(identity)
-                }
-              } catch {
-                case e: Exception =>
-                  println("Error decoding subjectAltName" + e.getLocalizedMessage, e)
-              }
-            } else {
-              println("SubjectAltName of invalid type found: " + certificate)
-            }
-          }
-        }
-      } catch {
-        case e: CertificateParsingException =>
-          println("Error parsing SubjectAltName in certificate: " + certificate + "\r\nerror:" + e.getLocalizedMessage, e)
-      }
-      identities.asScala.toSeq
-    }
-  }*/
 }
