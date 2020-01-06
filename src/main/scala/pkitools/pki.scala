@@ -6,14 +6,16 @@ import java.nio.file.Files
 import java.security.cert.{CertificateFactory, X509Certificate}
 import java.security.spec.PKCS8EncodedKeySpec
 import java.security.{SecureRandom, _}
-import java.util.Base64
+import java.util.{Base64, Calendar}
 import java.util.concurrent.Executors
 import java.util.concurrent.atomic.{AtomicLong, AtomicReference}
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http.ServerBinding
+import akka.http.scaladsl.model.MediaType.WithFixedCharset
 import akka.http.scaladsl.model._
 import akka.http.scaladsl.model.headers.{Accept, RawHeader}
+import akka.http.scaladsl.settings.{ParserSettings, ServerSettings}
 import akka.http.scaladsl.util.FastFuture
 import akka.http.scaladsl.{ConnectionContext, Http, HttpsConnectionContext}
 import akka.stream.{Materializer, TLSClientAuth}
@@ -27,13 +29,16 @@ import io.otoroshi.pki.utils.IdGenerator
 import io.otoroshi.pki.utils.SSLImplicits._
 import javax.net.ssl.{KeyManagerFactory, SSLContext, TrustManagerFactory}
 import org.apache.commons.cli.{DefaultParser, Options}
+import org.bouncycastle.asn1.ASN1ObjectIdentifier
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers
 import org.bouncycastle.asn1.x500.X500Name
 import org.bouncycastle.asn1.x509.{AuthorityKeyIdentifier, BasicConstraints, GeneralName, GeneralNames, X509Name, _}
-import org.bouncycastle.cert.X509v3CertificateBuilder
+import org.bouncycastle.cert.{X509CertificateHolder, X509v3CertificateBuilder}
+import org.bouncycastle.cert.ocsp._
 import org.bouncycastle.crypto.util.PrivateKeyFactory
-import org.bouncycastle.operator.bc.BcRSAContentSignerBuilder
-import org.bouncycastle.operator.{DefaultDigestAlgorithmIdentifierFinder, DefaultSignatureAlgorithmIdentifierFinder}
+import org.bouncycastle.operator.bc.{BcDigestCalculatorProvider, BcRSAContentSignerBuilder}
+import org.bouncycastle.operator.jcajce.{JcaContentSignerBuilder, JcaContentVerifierProviderBuilder}
+import org.bouncycastle.operator.{ContentVerifierProvider, DefaultDigestAlgorithmIdentifierFinder, DefaultSignatureAlgorithmIdentifierFinder}
 import org.bouncycastle.pkcs.PKCS10CertificationRequest
 import org.bouncycastle.pkcs.jcajce.JcaPKCS10CertificationRequestBuilder
 import org.bouncycastle.util.io.pem.PemReader
@@ -461,6 +466,13 @@ class Server(pki: Pki, env: Env) {
   implicit val e = env
   implicit val http = Http()
 
+  private val utf8 = HttpCharsets.`UTF-8`
+  private val `application/x-pem-file`: WithFixedCharset = MediaType.customWithFixedCharset("application", "x-pem-file", utf8)
+  private val `application/ocsp-request`: MediaType.Binary = MediaType.customBinary("application", "ocsp-request", MediaType.NotCompressible)
+  private val `application/ocsp-response`: MediaType.Binary = MediaType.customBinary("application", "ocsp-response", MediaType.NotCompressible)
+  private val parserSettings = ParserSettings(system).withCustomMediaTypes(`application/x-pem-file`, `application/ocsp-request`, `application/ocsp-response`)
+  private val serverSettings = ServerSettings(system).withParserSettings(parserSettings)
+
   private val ref = new AtomicReference[ServerBinding](null)
 
   def passWithOtoroshiAndBody(request: HttpRequest)(f: ByteString => Future[HttpResponse]): Future[HttpResponse] = {
@@ -514,7 +526,7 @@ class Server(pki: Pki, env: Env) {
   def createdText(body: String) = HttpResponse(
     201,
     entity = HttpEntity(
-      ContentTypes.`text/plain(UTF-8)`,
+      `application/x-pem-file`,
       body
     )
   )
@@ -530,7 +542,7 @@ class Server(pki: Pki, env: Env) {
   def handle(request: HttpRequest): Future[HttpResponse] = {
     (request.method, request.uri.toRelative.path.toString()) match {
       case (HttpMethods.GET, "/api/pki/ca") => passWithOtoroshi(request) {
-        if (!request.header[Accept].exists(_.value.contains("text/plain"))) {
+        if (!request.header[Accept].exists(_.value.contains("application/x-pem-file"))) {
           HttpResponse(
             200,
             entity = HttpEntity(
@@ -542,7 +554,7 @@ class Server(pki: Pki, env: Env) {
           HttpResponse(
             200,
             entity = HttpEntity(
-              ContentTypes.`text/plain(UTF-8)`,
+              `application/x-pem-file`,
               env.config.ca.asPem
             )
           ).future
@@ -555,17 +567,17 @@ class Server(pki: Pki, env: Env) {
             request.uri.query().get("self-signed").exists(_.toBoolean) match {
               case false => pki.genCert(body, env.config.ca, env.config.caKey).map {
                 case Left(err) => badRequest(err)
-                case Right(resp) if request.header[Accept].exists(_.value.contains("text/plain")) => createdText(resp.chain)
+                case Right(resp) if request.header[Accept].exists(_.value.contains("application/x-pem-file")) => createdText(resp.chain)
                 case Right(resp) => createdJson(resp.json)
               }
               case true if query.ca => pki.genSelfSignedCert(body).map {
                 case Left(err) => badRequest(err)
-                case Right(resp) if request.header[Accept].exists(_.value.contains("text/plain")) => createdText(resp.chain)
+                case Right(resp) if request.header[Accept].exists(_.value.contains("application/x-pem-file")) => createdText(resp.chain)
                 case Right(resp) => createdJson(resp.json)
               }
               case true if !query.ca => pki.genSelfSignedCA(body).map {
                 case Left(err) => badRequest(err)
-                case Right(resp) if request.header[Accept].exists(_.value.contains("text/plain")) => createdText(resp.chain)
+                case Right(resp) if request.header[Accept].exists(_.value.contains("application/x-pem-file")) => createdText(resp.chain)
                 case Right(resp) => createdJson(resp.json)
               }
             }
@@ -575,23 +587,35 @@ class Server(pki: Pki, env: Env) {
       case (HttpMethods.POST, "/api/pki/csr") => passWithOtoroshiAndBody(request) { body =>
         pki.genCsr(body, env.config.ca, env.config.caKey).map {
           case Left(err) => badRequest(err)
-          case Right(resp) if request.header[Accept].exists(_.value.contains("text/plain")) => createdText(resp.chain)
+          case Right(resp) if request.header[Accept].exists(_.value.contains("application/x-pem-file")) => createdText(resp.chain)
           case Right(resp) => createdJson(resp.json)
         }
       }
       case (HttpMethods.POST, "/api/pki/keypair") => passWithOtoroshiAndBody(request) { body =>
         pki.genKeyPair(body).map {
           case Left(err) => badRequest(err)
-          case Right(resp) if request.header[Accept].exists(_.value.contains("text/plain")) => createdText(resp.chain)
+          case Right(resp) if request.header[Accept].exists(_.value.contains("application/x-pem-file")) => createdText(resp.chain)
           case Right(resp) => createdJson(resp.json)
         }
       }
       case (HttpMethods.POST, "/api/pki/_sign") => passWithOtoroshiAndBody(request) { body =>
         pki.signCert(body, env.config.ca, env.config.caKey).map {
           case Left(err) => badRequest(err)
-          case Right(resp) if request.header[Accept].exists(_.value.contains("text/plain")) => createdText(resp.chain)
+          case Right(resp) if request.header[Accept].exists(_.value.contains("application/x-pem-file")) => createdText(resp.chain)
           case Right(resp) => createdJson(resp.json)
         }
+      }
+      case (HttpMethods.POST, "/api/pki/ocsp") => passWithOtoroshiAndBody(request) { body =>
+        // TODO: fetch certs from DB
+        // TODO: add revoke api
+        val resp = utils.OCSP.processOcspRequest(body, Seq.empty, true, false, env.config.ca, env.config.caKey)
+        HttpResponse(
+          200,
+          entity = HttpEntity(
+            `application/ocsp-response`,
+            resp
+          )
+        ).future
       }
       case _ => passWithOtoroshi(request) {
         notFound().future
@@ -750,7 +774,8 @@ class Server(pki: Pki, env: Env) {
         handler = handle,
         interface = env.config.interface,
         port = env.config.port,
-        connectionContext = https
+        connectionContext = https,
+        settings = serverSettings
       ).map { binding =>
         ref.set(binding)
         logger.info(s"pki-tools server started on https://${env.config.hostname}:${env.config.port} - ${env.config.interface}")
@@ -759,7 +784,8 @@ class Server(pki: Pki, env: Env) {
       http.bindAndHandleAsync(
         handler = handle,
         interface = env.config.interface,
-        port = env.config.port
+        port = env.config.port,
+        settings = serverSettings
       ).map { binding =>
         ref.set(binding)
         logger.info(s"pki-tools server started on https://${env.config.interface}:${env.config.port}")
@@ -1065,5 +1091,112 @@ object utils {
     def token: String                    = token(64)
     def extendedToken(size: Int): String = token(EXTENDED_CHARACTERS, size)
     def extendedToken: String            = token(EXTENDED_CHARACTERS, 64)
+  }
+
+  object OCSP {
+
+    def processOcspRequest(requestBytes: ByteString, certs: Seq[(X509Certificate, CertificateStatus)], bRequireRequestSignature: Boolean, bRequireNonce: Boolean, ca: X509Certificate, caKey: PrivateKey): ByteString = {
+      import collection.JavaConverters._
+      Try {
+        val caHolder = new X509CertificateHolder(ca.getEncoded)
+        val ocspRequest = new OCSPReq(requestBytes.toArray)
+        val requestCerts = ocspRequest.getCerts
+        val requestList = ocspRequest.getRequestList
+        val responseBuilder = new BasicOCSPRespBuilder(new RespID(new X500Name(ca.getSubjectDN.getName)))
+        logger.info(s"OCSP request version: ${ocspRequest.getVersionNumber}, Requestor name: ${ocspRequest.getRequestorName}, is signed: ${ocspRequest.isSigned}, has extentions: ${ocspRequest.hasExtensions}, number of additional certificates: ${requestCerts.length}, number of certificate ids to verify: ${requestList.length}")
+
+        // check request signature
+        val ocspResult = if (ocspRequest.isSigned()) {
+          logger.info("OCSP Request verify request signature: try certificates from request")
+          ocspRequest.getCerts.toSeq.find { cert =>
+            val cpv = new JcaContentVerifierProviderBuilder().setProvider("BC").build(cert)
+            !ocspRequest.isSignatureValid(cpv)
+          }.orElse(ocspRequest.getCerts.toSeq.find { cert =>
+            val cpv = new JcaContentVerifierProviderBuilder().setProvider("BC").build(ca)
+            !ocspRequest.isSignatureValid(cpv)
+          }) match {
+            case None =>
+              logger.info("OCSP Request signature validation successful")
+              OCSPRespBuilder.SUCCESSFUL
+            case Some(_) =>
+              OCSPRespBuilder.UNAUTHORIZED
+          }
+        } else {
+          if (bRequireRequestSignature) {
+            logger.info("OCSP Request signature is not present but required, fail the request")
+             OCSPRespBuilder.SIG_REQUIRED
+          } else {
+            OCSPRespBuilder.SUCCESSFUL
+          }
+        }
+
+        // process nonce
+        val extNonce = ocspRequest.getExtension(new ASN1ObjectIdentifier("1.3.6.1.5.5.7.48.1.2"))
+        val ocspResult2 = if (extNonce != null) {
+          logger.info("Nonce is present in the request")
+          responseBuilder.setResponseExtensions(new Extensions(extNonce))
+          OCSPRespBuilder.SUCCESSFUL
+        } else {
+          logger.info("Nonce is not present in the request")
+          if (bRequireNonce) {
+            logger.info("Nonce is required, fail the request")
+            OCSPRespBuilder.UNAUTHORIZED
+          } else {
+            OCSPRespBuilder.SUCCESSFUL
+          }
+        }
+
+        if (ocspResult == OCSPRespBuilder.SUCCESSFUL && ocspResult2 == OCSPRespBuilder.SUCCESSFUL) {
+          requestList.toSeq.map { req =>
+            val certId = req.getCertID
+            val serialNumber = "0x" + certId.getSerialNumber.toString(16)
+            var certificateStatus: CertificateStatus = null
+            logger.info(s"Check issuer for certificate entry serial number: $serialNumber")
+            if (certId.matchesIssuer(caHolder, new BcDigestCalculatorProvider())) {
+              logger.info("Check issuer successful")
+            } else {
+              logger.info("Check issuer failed. Status unknown")
+              certificateStatus = new UnknownStatus()
+            }
+
+            if (certificateStatus == null) {
+              logger.info("Check revocation status for certificate entry serial number: " + serialNumber)
+              certs.find { cert =>
+                val certSn = "0x" + cert._1.getSerialNumber.toString(16)
+                certSn == serialNumber
+              } match {
+                case None =>
+                  logger.info("Status unknown")
+                  certificateStatus = new UnknownStatus()
+                case Some((cert, status)) =>
+                  certificateStatus = status
+              }
+            }
+            responseBuilder.addResponse(certId, certificateStatus, org.joda.time.DateTime.now().toDate, org.joda.time.DateTime.now().plusDays(10).toDate, null);
+          }
+          val chain = Array.apply(ca)
+          val signer = new JcaContentSignerBuilder(KeystoreSettings.SignatureAlgorithmName).setProvider("BC").build(caKey)
+          val ocspResponse = responseBuilder.build(signer, Array(caHolder), Calendar.getInstance().getTime())
+          val ocspResponseBuilder = new OCSPRespBuilder()
+          val encoded = ocspResponseBuilder.build(ocspResult, ocspResponse).getEncoded()
+          logger.info("Sending OCSP response to client, size: " + encoded.length)
+          ByteString(encoded)
+        } else {
+          val chain = Array.apply(ca)
+          val signer = new JcaContentSignerBuilder(KeystoreSettings.SignatureAlgorithmName).setProvider("BC").build(caKey)
+          val ocspResponse = responseBuilder.build(signer, Array(caHolder), Calendar.getInstance().getTime())
+          val ocspResponseBuilder = new OCSPRespBuilder()
+          val encoded = ocspResponseBuilder.build(OCSPRespBuilder.INTERNAL_ERROR, ocspResponse).getEncoded()
+          logger.info("Sending OCSP response to client, size: " + encoded.length)
+          ByteString(encoded)
+        }
+      } match {
+        case Failure(e) =>
+          logger.error("Exception during processing OCSP request: ", e)
+          ByteString.apply(Array.empty[Byte])
+        case Success(r) =>
+          r
+      }
+    }
   }
 }
