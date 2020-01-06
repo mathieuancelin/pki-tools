@@ -96,3 +96,9 @@ curl -k -X POST -H 'Content-Type: application/json' -H 'Accept: application/x-pe
   "digestAlg" : "SHA-256"
 }'
 ```
+
+## Capture
+
+```ssh
+tshark -i lo0 -w tsshark.pcapng -f "host 127.0.0.1 and port 8443"
+```

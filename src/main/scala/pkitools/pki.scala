@@ -629,10 +629,10 @@ class Server(pki: Pki, env: Env) {
       val ks: KeyStore = KeyStore.getInstance("JKS")
       ks.load(null, null)
       // add ca to keystore
-      val id = "ca-" + env.config.ca.getSerialNumber.toString(16)
-      if (!ks.containsAlias(id)) {
-        ks.setKeyEntry(id, env.config.caKey, EMPTY_PASSWORD, Array(env.config.ca))
-      }
+      // val id = "ca-" + env.config.ca.getSerialNumber.toString(16)
+      // if (!ks.containsAlias(id)) {
+      //   ks.setKeyEntry(id, env.config.caKey, EMPTY_PASSWORD, Array(env.config.ca))
+      // }
       val autoGenerate = env.getBoolean("pki.autoGenerateCertFiles").getOrElse(false)
 
       {
@@ -739,7 +739,7 @@ class Server(pki: Pki, env: Env) {
           case Failure(e) =>
             logger.info("Auto-generating client certificate ...")
             Await.result(pki.genCert(GenCsrQuery(
-              hosts = Seq(env.config.hostname),
+              hosts = Seq(),
               key = GenKeyPairQuery(),
               name = SortedMap(
                 "C" -> "FR",
