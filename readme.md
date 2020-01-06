@@ -18,15 +18,15 @@ sbt run --- -Dpki.ca=/path/to/ca.pem, -Dpki.caKey=/path/to/ca-key.pem
 
 ## API
 
-```
-GET    --       /api/pki/ca
-POST   CSR      /api/pki/cert
-POST   CSR      /api/pki/csr
-POST   KEY      /api/pki/keypair
-POST   CSRPEM   /api/pki/_sign
-```
+| verb   | path               | input         | output       |
+|--------|--------------------|---------------|--------------|
+| `GET`  | `/api/pki/ca`      |               | `CERT-CHAIN` |
+| `POST` | `/api/pki/keypair` | `KEYQUERY`    | `KEYPAIR`    |
+| `POST` | `/api/pki/csr`     | `CSRQUERY`    | `CSR`        |
+| `POST` | `/api/pki/_sign`   | `CSR`         | `CERT-CHAIN` |
+| `POST` | `/api/pki/cert`    | `CSRCSRQUERY` | `CERT-CHAIN` |
 
-`CSR` format
+`CSRCSRQUERY` format
 
 ```json
 {
@@ -46,7 +46,7 @@ POST   CSRPEM   /api/pki/_sign
 }
 ```
 
-`KEY` format
+`KEYQUERY` format
 
 ```json
 {
