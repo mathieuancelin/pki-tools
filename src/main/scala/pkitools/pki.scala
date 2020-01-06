@@ -73,6 +73,7 @@ object models {
   ) {
     def subj: String = subject.getOrElse(name.map(t => s"${t._1}=${t._2}").mkString(","))
     def json: JsValue = GenCsrQuery.format.writes(this)
+    def hasDnsNameOrCName: Boolean = hosts.nonEmpty || subject.exists(_.toLowerCase().contains("cn=")) || name.contains("CN") || name.contains("cn")
   }
   object GenCsrQuery {
     private val format = new Format[GenCsrQuery] {
@@ -270,7 +271,9 @@ class BouncyCastlePki extends Pki {
           if (!query.ca) {
             extensionsGenerator.addExtension(Extension.keyUsage, true, new KeyUsage(KeyUsage.digitalSignature | KeyUsage.keyEncipherment))
             // extensionsGenerator.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(Seq(KeyPurposeId.id_kp_serverAuth, KeyPurposeId.id_kp_clientAuth).toArray))
-            if (query.client) {
+            if (query.client && query.hasDnsNameOrCName) {
+              extensionsGenerator.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(Seq(KeyPurposeId.id_kp_clientAuth, KeyPurposeId.id_kp_serverAuth).toArray))
+            } else if (query.client) {
               extensionsGenerator.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(Seq(KeyPurposeId.id_kp_clientAuth).toArray))
             } else {
               extensionsGenerator.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(Seq(KeyPurposeId.id_kp_serverAuth).toArray))
@@ -359,7 +362,9 @@ class BouncyCastlePki extends Pki {
           if (!query.ca) {
             extensionsGenerator.addExtension(Extension.keyUsage, true, new KeyUsage(KeyUsage.digitalSignature | KeyUsage.keyEncipherment))
             // extensionsGenerator.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(Seq(KeyPurposeId.id_kp_serverAuth, KeyPurposeId.id_kp_clientAuth).toArray))
-            if (query.client) {
+            if (query.client && query.hasDnsNameOrCName) {
+              extensionsGenerator.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(Seq(KeyPurposeId.id_kp_clientAuth, KeyPurposeId.id_kp_serverAuth).toArray))
+            } else if (query.client) {
               extensionsGenerator.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(Seq(KeyPurposeId.id_kp_clientAuth).toArray))
             } else {
               extensionsGenerator.addExtension(Extension.extendedKeyUsage, false, new ExtendedKeyUsage(Seq(KeyPurposeId.id_kp_serverAuth).toArray))
