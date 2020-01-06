@@ -666,7 +666,7 @@ class Server(pki: Pki, env: Env) {
             .orElse(Try(KeyFactory.getInstance("DSA")))
             .map(_.generatePrivate(encodedKeySpec))
             .get
-          ks.setKeyEntry(cert.getSubjectDN.getName, key, EMPTY_PASSWORD, Array(cert, env.config.ca))
+          ks.setKeyEntry(env.config.hostname, key, EMPTY_PASSWORD, Array(cert, env.config.ca))
         } match {
           case Success(_) =>
             logger.info(s"Loading server cert. from $serverCertPath")
@@ -692,7 +692,7 @@ class Server(pki: Pki, env: Env) {
                   Files.writeString(new File(serverCertPath).toPath, resp.cert.asPem)
                   Files.writeString(new File(serverCertKeyPath).toPath, resp.key.asPem)
                 }
-                ks.setKeyEntry(resp.cert.getSubjectDN.getName, resp.key, EMPTY_PASSWORD, Array(resp.cert, resp.ca))
+                ks.setKeyEntry(env.config.hostname, resp.key, EMPTY_PASSWORD, Array(resp.cert, resp.ca))
               }
             }
           }
@@ -731,7 +731,7 @@ class Server(pki: Pki, env: Env) {
             .orElse(Try(KeyFactory.getInstance("DSA")))
             .map(_.generatePrivate(encodedKeySpec))
             .get
-          ks.setKeyEntry(cert.getSubjectDN.getName, key, EMPTY_PASSWORD, Array(cert, env.config.ca))
+          ks.setKeyEntry(s"client-cert-${cert.getSerialNumber}", key, EMPTY_PASSWORD, Array(cert, env.config.ca))
         } match {
           case Success(_) =>
             logger.info(s"Loading client cert. from $clientCertPath")
@@ -739,7 +739,7 @@ class Server(pki: Pki, env: Env) {
           case Failure(e) =>
             logger.info("Auto-generating client certificate ...")
             Await.result(pki.genCert(GenCsrQuery(
-              hosts = Seq(),
+              hosts = Seq.empty,
               key = GenKeyPairQuery(),
               name = SortedMap(
                 "C" -> "FR",
@@ -758,7 +758,7 @@ class Server(pki: Pki, env: Env) {
                   Files.writeString(new File(clientCertPath).toPath, resp.cert.asPem)
                   Files.writeString(new File(clientCertKeyPath).toPath, resp.key.asPem)
                 }
-                ks.setKeyEntry(resp.cert.getSubjectDN.getName, resp.key, EMPTY_PASSWORD, Array(resp.cert, resp.ca))
+                ks.setKeyEntry(s"client-cert-${resp.cert.getSerialNumber}", resp.key, EMPTY_PASSWORD, Array(resp.cert, resp.ca))
               }
             }
         }
