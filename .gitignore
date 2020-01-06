@@ -1,4 +1,8 @@
 target/
 .idea
 .metals
+.bloop
+.vscode
 /sandbox
+/logs
+*.pem
