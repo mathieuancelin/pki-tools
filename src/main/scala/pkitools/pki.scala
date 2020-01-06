@@ -26,6 +26,7 @@ import io.otoroshi.pki.models._
 import io.otoroshi.pki.utils.IdGenerator
 import io.otoroshi.pki.utils.SSLImplicits._
 import javax.net.ssl.{KeyManagerFactory, SSLContext, TrustManagerFactory}
+import org.apache.commons.cli.{DefaultParser, Options}
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers
 import org.bouncycastle.asn1.x500.X500Name
 import org.bouncycastle.asn1.x509.{AuthorityKeyIdentifier, BasicConstraints, GeneralName, GeneralNames, X509Name, _}
@@ -856,8 +857,8 @@ object PkiTools {
 
   val logger = LoggerFactory.getLogger("pki-tools")
 
-  def startServer(): Unit = {
-    val env = new ProdEnv(ConfigFactory.load())
+  def startServer(overrideConfig: Config): Unit = {
+    val env = new ProdEnv(overrideConfig.withFallback(ConfigFactory.load()))
     val pki = new BouncyCastlePki()
     val server = new Server(pki, env)
     server.start()
@@ -866,21 +867,74 @@ object PkiTools {
     }))
   }
 
-  def test(): Unit = {
-    logger.info(Json.prettyPrint(GenCsrQuery(
-      hosts = Seq("www.oto.tools", "api.oto.tools"),
-      key = GenKeyPairQuery(),
-      name = SortedMap(
-        "O" -> "Otoroshi",
-        "C" -> "FR"
-      ).toMap
-    ).json))
-  }
-
   def main(args: Array[String]): Unit = {
-    args.find(_ == "test") match {
-      case None => startServer()
-      case Some(_) => test()
+
+    val options = new Options()
+    options.addOption("caCert", true, "Path to the cacert file path")
+    options.addOption("caKey", true, "Path to the cacert private key file path")
+    options.addOption("autogen", false, "Write files when autogenerating a certificate")
+    options.addOption("snowflake", true, "Snowflake instance number")
+    options.addOption("oto", false, "Serving through Otoroshi")
+    options.addOption("otoSecret", true, "Otoroshi secret value")
+    options.addOption("otoIss", true, "Otoroshi issuer values")
+    options.addOption("https", false, "HTTPS enabled")
+    options.addOption("interface", true, "Network Interface for listening")
+    options.addOption("port", true, "Port number")
+    options.addOption("host", true, "Host name")
+    options.addOption("servCert", true, "Server certificate file path")
+    options.addOption("servCertKey", true, "Server certificate private key  file path")
+    options.addOption("mtls", false, "mTLS enabled")
+    options.addOption("cliCert", true, "Client certificate file path")
+    options.addOption("cliCertKey", true, "Client certificate private key file path")
+    val parser = new DefaultParser()
+
+    def parse(ar: List[String]) = {
+      val cmd = parser.parse(options, ar.toArray)
+      ConfigFactory.parseString(
+        s"""
+          |pki.ca = "${Try(cmd.getOptionValue("caCert")).toOption.getOrElse("null")}"
+          |pki.caKey = "${Try(cmd.getOptionValue("caKey")).toOption.getOrElse("null")}"
+          |pki.autoGenerateCertFiles = ${Try(cmd.getOptionValue("autogen")).toOption.getOrElse("null")}
+          |pki.snowflakeSeed = ${Try(cmd.getOptionValue("snowflake")).toOption.getOrElse("null")}
+          |pki.otoroshi.enabled = ${Try(cmd.getOptionValue("oto")).toOption.getOrElse("null")}
+          |pki.otoroshi.secret = "${Try(cmd.getOptionValue("otoSecret")).toOption.getOrElse("null")}"
+          |pki.otoroshi.issuer = "${Try(cmd.getOptionValue("otoIss")).toOption.getOrElse("null")}"
+          |pki.http.https = ${Try(cmd.getOptionValue("https")).toOption.getOrElse("null")}
+          |pki.http.interface = "${Try(cmd.getOptionValue("interface")).toOption.getOrElse("null")}"
+          |pki.http.port = ${Try(cmd.getOptionValue("port")).toOption.getOrElse("null")}
+          |pki.http.hostname = "${Try(cmd.getOptionValue("host")).toOption.getOrElse("null")}"
+          |pki.http.mtls = ${Try(cmd.getOptionValue("mtls")).toOption.getOrElse("null")}
+          |pki.http.cert = "${Try(cmd.getOptionValue("servCert")).toOption.getOrElse("null")}"
+          |pki.http.key = "${Try(cmd.getOptionValue("servCertKey")).toOption.getOrElse("null")}"
+          |pki.http.clientCert = "${Try(cmd.getOptionValue("cliCert")).toOption.getOrElse("null")}"
+          |pki.http.clientKey = "${Try(cmd.getOptionValue("cliCertKey")).toOption.getOrElse("null")}"
+        """.stripMargin)
+    }
+
+    args.toList match {
+      case Nil => startServer(ConfigFactory.empty())
+      case "serve" :: tail =>
+        startServer(parse(tail))
+      case "server" :: tail =>
+        startServer(parse(tail))
+      case "serve help" :: tail =>
+        import org.apache.commons.cli.HelpFormatter
+        val formatter = new HelpFormatter
+        formatter.printHelp("pki-tools serve", options)
+      case "server help" :: tail =>
+        import org.apache.commons.cli.HelpFormatter
+        val formatter = new HelpFormatter
+        formatter.printHelp("pki-tools servers", options)
+      case "remote" :: tail =>
+        logger.info("Remoting not implemented yet") // TODO
+      case "help" :: tail =>
+        import org.apache.commons.cli.HelpFormatter
+        val formatter = new HelpFormatter
+        formatter.printHelp("pki-tools", options)
+      case _ =>
+        import org.apache.commons.cli.HelpFormatter
+        val formatter = new HelpFormatter
+        formatter.printHelp("pki-tools", options)
     }
   }
 }
@@ -934,6 +988,7 @@ object utils {
 
   class IdGenerator(generatorId: Long) {
     def nextId(): Long      = IdGenerator.nextId(generatorId)
+    def nextIdSafe(): Option[Long]      = Try(IdGenerator.nextId(generatorId)).toOption
     def nextIdStr(): String = IdGenerator.nextIdStr(generatorId)
   }
 

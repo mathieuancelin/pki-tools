@@ -40,8 +40,9 @@ lazy val root = (project in file("."))
       "com.typesafe.play"        %% "play-json-joda"           % "2.6.8",
       "com.typesafe.akka"        %% "akka-http"                % "10.1.11",
       "com.typesafe.akka"        %% "akka-stream"              % "2.6.1",
-      "com.auth0"                % "java-jwt"                  % "3.4.0",
-      "ch.qos.logback"           % "logback-classic"           % "1.2.3",
+      "com.auth0"                %  "java-jwt"                 % "3.4.0",
+      "ch.qos.logback"           %  "logback-classic"          % "1.2.3",
+      "commons-cli"              %  "commons-cli"              % "1.4",
       scalaTest % Test
     )
   )
