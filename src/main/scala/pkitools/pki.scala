@@ -72,7 +72,7 @@ object models {
       subject: Option[String] = None,
       client: Boolean = false,
       ca: Boolean = false,
-      days: Int = 365,
+      duration: FiniteDuration = 365.days,
       signatureAlg: String = "SHA256WithRSAEncryption",
       digestAlg: String = "SHA-256"
   ) {
@@ -90,7 +90,7 @@ object models {
           subject = (json \ "subject").asOpt[String],
           client = (json \ "client").asOpt[Boolean].getOrElse(false),
           ca = (json \ "ca").asOpt[Boolean].getOrElse(false),
-          days = (json \ "days").asOpt[Int].getOrElse(365),
+          duration = (json \ "duration").asOpt[Long].map(_.millis).getOrElse(365.days),
           signatureAlg = (json \ "signatureAlg").asOpt[String].getOrElse("SHA256WithRSAEncryption"),
           digestAlg = (json \ "digestAlg").asOpt[String].getOrElse("SHA-256"),
         )
@@ -106,7 +106,7 @@ object models {
         "subject" -> o.subject.map(JsString.apply).getOrElse(JsNull).as[JsValue],
         "client" -> o.client,
         "ca" -> o.ca,
-        "days" -> o.days,
+        "duration" -> o.duration.toMillis,
         "signatureAlg" -> o.signatureAlg,
         "digestAlg" -> o.digestAlg,
       )
@@ -171,16 +171,6 @@ object models {
   }
 }
 
-trait Env {
-  def conf: Config
-  def config: PkiToolConfig
-  def generator: IdGenerator
-  def getString(path: String): Option[String]
-  def getLong(path: String): Option[Long]
-  def getInt(path: String): Option[Int]
-  def getBoolean(path: String): Option[Boolean]
-}
-
 trait Pki {
 
   import utils.AsyncImplicits._
@@ -204,12 +194,12 @@ trait Pki {
   }
 
   // sign             signs a certificate
-  def signCert(csr: ByteString, caCert: X509Certificate, caKey: PrivateKey)(implicit ec: ExecutionContext): Future[Either[String, SignCertResponse]] = {
+  def signCert(csr: ByteString, validity: FiniteDuration, caCert: X509Certificate, caKey: PrivateKey)(implicit ec: ExecutionContext): Future[Either[String, SignCertResponse]] = {
     val pemReader = new PemReader(new StringReader(csr.utf8String))
     val pemObject = pemReader.readPemObject()
     val _csr = new PKCS10CertificationRequest(pemObject.getContent)
     pemReader.close()
-    signCert(_csr, caCert, caKey)
+    signCert(_csr, validity, caCert, caKey)
   }
 
   // selfsign         generates a self-signed certificate
@@ -237,7 +227,7 @@ trait Pki {
   def genCert(query: GenCsrQuery, caCert: X509Certificate, caKey: PrivateKey)(implicit ec: ExecutionContext): Future[Either[String, GenCertResponse]]
 
   // sign             signs a certificate
-  def signCert(csr: PKCS10CertificationRequest, caCert: X509Certificate, caKey: PrivateKey)(implicit ec: ExecutionContext): Future[Either[String, SignCertResponse]]
+  def signCert(csr: PKCS10CertificationRequest, validity: FiniteDuration, caCert: X509Certificate, caKey: PrivateKey)(implicit ec: ExecutionContext): Future[Either[String, SignCertResponse]]
 
   def genSelfSignedCA(query: GenCsrQuery)(implicit ec: ExecutionContext): Future[Either[String, GenCertResponse]]
 
@@ -305,7 +295,7 @@ class BouncyCastlePki(generator: IdGenerator) extends Pki {
       csr <- genCsr(query, caCert, caKey)
       cert <- csr match {
         case Left(err) => FastFuture.successful(Left(err))
-        case Right(_csr) => signCert(_csr.csr,caCert, caKey)
+        case Right(_csr) => signCert(_csr.csr, query.duration, caCert, caKey)
       }
     } yield cert match {
       case Left(err) => Left(err)
@@ -319,12 +309,12 @@ class BouncyCastlePki(generator: IdGenerator) extends Pki {
   }
 
   // sign             signs a certificate
-  override def signCert(csr: PKCS10CertificationRequest, caCert: X509Certificate, caKey: PrivateKey)(implicit ec: ExecutionContext): Future[Either[String, SignCertResponse]] = {
+  override def signCert(csr: PKCS10CertificationRequest, validity: FiniteDuration, caCert: X509Certificate, caKey: PrivateKey)(implicit ec: ExecutionContext): Future[Either[String, SignCertResponse]] = {
     generator.nextIdSafe().map { _serial =>
       val issuer = new X500Name(caCert.getSubjectX500Principal.getName)
       val serial = java.math.BigInteger.valueOf(_serial) // new java.math.BigInteger(32, new SecureRandom)
       val from = new java.util.Date
-      val to = new java.util.Date(System.currentTimeMillis + (365 * 86400000L))
+      val to = new java.util.Date(System.currentTimeMillis + validity.toMillis)
       val certgen = new X509v3CertificateBuilder(issuer, serial, from, to, csr.getSubject, csr.getSubjectPublicKeyInfo)
       csr.getAttributes.foreach(attr => {
         attr.getAttributeValues.collect {
@@ -385,7 +375,7 @@ class BouncyCastlePki(generator: IdGenerator) extends Pki {
           val issuer = csr.getSubject
           val serial = java.math.BigInteger.valueOf(_serial) // new java.math.BigInteger(32, new SecureRandom)
           val from = new java.util.Date
-          val to = new java.util.Date(System.currentTimeMillis + (365 * 86400000L))
+          val to = new java.util.Date(System.currentTimeMillis + query.duration.toMillis)
           val certgen = new X509v3CertificateBuilder(issuer, serial, from, to, csr.getSubject, csr.getSubjectPublicKeyInfo)
           csr.getAttributes.foreach(attr => {
             attr.getAttributeValues.collect {
@@ -430,7 +420,7 @@ class BouncyCastlePki(generator: IdGenerator) extends Pki {
         val issuer = csr.getSubject
         val serial = java.math.BigInteger.valueOf(_serial) // new java.math.BigInteger(32, new SecureRandom)
         val from = new java.util.Date
-        val to = new java.util.Date(System.currentTimeMillis + (365 * 86400000L))
+        val to = new java.util.Date(System.currentTimeMillis + query.duration.toMillis)
         val certgen = new X509v3CertificateBuilder(issuer, serial, from, to, csr.getSubject, csr.getSubjectPublicKeyInfo)
         csr.getAttributes.foreach(attr => {
           attr.getAttributeValues.collect {
@@ -454,6 +444,16 @@ class BouncyCastlePki(generator: IdGenerator) extends Pki {
       }
     }
   }
+}
+
+trait Env {
+  def conf: Config
+  def config: PkiToolConfig
+  def generator: IdGenerator
+  def getString(path: String): Option[String]
+  def getLong(path: String): Option[Long]
+  def getInt(path: String): Option[Int]
+  def getBoolean(path: String): Option[Boolean]
 }
 
 class Server(pki: Pki, env: Env) {
@@ -599,7 +599,8 @@ class Server(pki: Pki, env: Env) {
         }
       }
       case (HttpMethods.POST, "/api/pki/_sign") => passWithOtoroshiAndBody(request) { body =>
-        pki.signCert(body, env.config.ca, env.config.caKey).map {
+        val duration = request.uri.query().get("duration").map(_.toLong.millis).getOrElse(365.days)
+        pki.signCert(body, duration, env.config.ca, env.config.caKey).map {
           case Left(err) => badRequest(err)
           case Right(resp) if request.header[Accept].exists(_.value.contains("application/x-pem-file")) => createdText(resp.chain)
           case Right(resp) => createdJson(resp.json)
